@@ -5,12 +5,12 @@ App::uses('Component', 'Controller');
 class EmberDataComponent extends Component {
 	public $dataKey = 'ember';
 
-	public function setup(Controller $controller) {
+	public function startup(Controller $controller) {
 		$data = array();
-		if ($controller->request->is('put')) {
-			$data = json_decode($this->request->data, true);
-		} elseif ($controller->request->is('post')) {
-			$data = json_decode(file_get_contents('php://input'), true);
+		if ($controller->request->isPut()) {
+			$data = json_decode($controller->request->data, true);
+		} elseif ($controller->request->isPost()) {
+			$data = json_decode($this->formData(), true);
 		}
 		$controller->request->{$this->dataKey} = $data;
 	}
@@ -23,5 +23,9 @@ class EmberDataComponent extends Component {
 		$name = $Model->name;
 		if (is_numeric(key($data))) {
 		}
+	}
+
+	protected function formData() {
+		return file_get_contents('php://input');
 	}
 }

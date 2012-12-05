@@ -3,7 +3,25 @@
 App::uses('AppHelper', 'View/Helper');
 
 class HandlebarsHelper extends AppHelper {
+	public $basePath = null;
+
 	protected $_templateTag = "<script type=\"text/x-handlebars\" data-template-name=\"%s\">\n%s\n</script>";
+
+	/**
+	 * Setting the basePath if it is passed in, otherwise set it to webroot.
+	 *
+	 * @access public
+	 * @param View $View
+	 * @param array $settings
+	 */
+	public function __construct($View, $settings = array()) {
+		if (isset($settings['basePath'])) {
+			$this->basePath = $settings['basePath'];
+		} else {
+			$this->basePath = APP . WEBROOT_DIR;
+		}
+		parent::__construct($View, $settings);
+	}
 
 	/**
 	 * Public inteface to load all handlebars templates in $path as script tags.
@@ -30,10 +48,11 @@ class HandlebarsHelper extends AppHelper {
 		if ($this->_validDirectory($path)) {
 			if ($handle = opendir($path)) {
 				while (false !== ($file = readdir($handle))) {
-					if (is_dir($file)) {
-						array_merge($templates, $this->_loadTemplates($path . DS . $file));
+					$thisPath = $path . DS . $file;
+					if ($this->_validDirectory($thisPath)) {
+						$templates = $templates + $this->_loadTemplates($thisPath);
 					} else {
-						$templates[] = $this->_loadTemplate($path . DS . $file);
+						$templates[] = $this->_loadTemplate($thisPath);
 					}
 				}
 			} else {
@@ -67,11 +86,11 @@ class HandlebarsHelper extends AppHelper {
 	 * @return string
 	 */
 	protected function _fullPath($path) {
-		return APP . WEBROOT_DIR . str_replace(DS.DS, DS, DS . $path);
+		return $this->basePath . str_replace(DS.DS, DS, DS . $path);
 	}
 
 	/**
-	 * Given a path to a file, this will convert the name to a hyphenated
+	 * Given a path to a file, this will convert the name to a camelCase
 	 * template name.
 	 *
 	 * @access protected
