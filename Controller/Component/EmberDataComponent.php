@@ -15,16 +15,6 @@ class EmberDataComponent extends Component {
 		$controller->request->{$this->dataKey} = $data;
 	}
 
-	public function serialize($Model, $data = null) {
-		$return = array();
-		if (!$data || empty($data)) {
-			return array();
-		}
-		$name = $Model->name;
-		if (is_numeric(key($data))) {
-		}
-	}
-
 	protected function formData() {
 		return file_get_contents('php://input');
 	}
