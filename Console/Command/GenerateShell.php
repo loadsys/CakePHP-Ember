@@ -1,9 +1,14 @@
 <?php
 
-App::uses('AppShell', 'Console/Command/Task');
+App::uses('AppShell', 'Console/Command');
 
-class BakeShell extends AppShell {
-	public $tasks = array('Controller', 'Model', 'View', 'Route');
+class GenerateShell extends AppShell {
+	public $tasks = array(
+		'Ember.Controller',
+		'Ember.Model',
+		'Ember.View',
+		'Ember.Route'
+	);
 
 	public function main() {
 		$this->out(__d('cake_console', 'Interactive Ember Bake Shell'));
