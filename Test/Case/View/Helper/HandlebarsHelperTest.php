@@ -25,7 +25,7 @@ class HandlebarsHelperTest extends CakeTestCase {
 		parent::setUp();
 		$this->basePath = APP.'Plugin'.DS.'Ember'.DS.'Test';
 		$this->View = $this->getMock('View', array('append'), array(new TestController()));
-		$settings = array('basePath' => $this->basePath);
+		$settings = array('cache' => false, 'basePath' => $this->basePath);
 		$this->Handlebars = new TestHandlebarsHelper($this->View, $settings);
 		Configure::write('Asset.timestamp', false);
 	}

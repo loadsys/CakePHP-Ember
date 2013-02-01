@@ -14,6 +14,12 @@ class HandlebarsHelper extends AppHelper {
 	public function __construct($View, $settings = array()) {
 		parent::__construct($View, $settings);
 
+		foreach (array('ext', 'cache') as $opt) {
+			if (isset($settings[$opt])) {
+				$this->{$opt} = $settings[$opt];
+			}
+		}
+
 		if (isset($settings['basePath'])) {
 			$this->basePath = $settings['basePath'];
 		} else {
