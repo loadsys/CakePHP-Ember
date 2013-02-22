@@ -18,7 +18,29 @@ class EmberSuiteComponent extends Component {
 	 * @var array
 	 */
 	public $_loadComponents = array('EmberData');
+	public $_componentOptions = array();
 	public $_loadHelpers = array('Handlebars');
+	public $_helperOptions = array();
+
+	/**
+	 * Pulling the helpers and components options out of the options out
+	 * of the options array if they exist.
+	 *
+	 * @access public
+	 * @param ComponentCollection $collection
+	 * @param array $options
+	 */
+	public function __construct(ComponentCollection $collection, $options = array()) {
+		if (isset($options['helpers'])) {
+			$this->_helperOptions = $options['helpers'];
+			unset($options['helpers']);
+		}
+		if (isset($options['components'])) {
+			$this->_componentOptions = $options['components'];
+			unset($options['components']);
+		}
+		parent::__construct($collection, $options);
+	}
 
 	/**
 	 * Check the controller helpers array for the presence of the Handlebar helper

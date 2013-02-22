@@ -48,4 +48,14 @@ class EmberSuiteComponentTest extends CakeTestCase {
 		$this->EmberSuite->startup($this->Controller);
 		$this->assertTrue(isset($this->Controller->EmberData));
 	}
+
+	public function testComponentAndHelperOptionsAreTakenOutOfOptionsArray() {
+		$options = array(
+			'helpers' => array('setting' => 'value'),
+			'components' => array('value' => 'setting')
+		);
+		$EmberSuite = new TestEmberSuiteComponent($this->getMock('ComponentCollection'), $options);
+		$this->assertEqual(array('setting' => 'value'), $EmberSuite->_helperOptions);
+		$this->assertEqual(array('value' => 'setting'), $EmberSuite->_componentOptions);
+	}
 }
