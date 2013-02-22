@@ -53,7 +53,8 @@ class EmberSuiteComponent extends Component {
 	public function startup(Controller $controller) {
 		foreach ($this->_loadComponents as $c) {
 			$component = $this->pluginName . '.' . $c;
-			$controller->{$c} = $controller->Components->load($component);
+			$options = $this->extractOptions($this->_componentOptions, array($c, $component));
+			$controller->{$c} = $controller->Components->load($component, $options);
 		}
 
 		$helpers = array();
@@ -64,10 +65,25 @@ class EmberSuiteComponent extends Component {
 		foreach ($this->_loadHelpers as $h) {
 			$helper = $this->pluginName . '.' . $h;
 			if (!isset($helpers[$helper]) && array_search($helper, $helpers) === false) {
-				$helpers = array_merge($helpers, array($helper));
+				$merge = array($helper);
+				$options = $this->extractOptions($this->_helperOptions, array($h, $helper));
+				if ($options) {
+					$merge = array($helper => $options);
+				}
+				$helpers = array_merge($helpers, $merge);
 			}
 		}
 
 		$controller->helpers = $helpers;
+	}
+
+	public function extractOptions($source, $keys = array()) {
+		$return = null;
+		foreach ($keys as $key) {
+			if (isset($source[$key])) {
+				$return = $source[$key];
+			}
+		}
+		return $return;
 	}
 }
